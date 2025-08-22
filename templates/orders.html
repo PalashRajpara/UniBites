@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+  <h2>My Orders</h2>
+  {% if orders %}
+    <ul>
+      {% for order in orders %}
+        <li>Order #{{ order.id }} - {{ order.created_at.strftime('%Y-%m-%d') }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have no orders yet.</p>
+  {% endif %}
+{% endblock %}
