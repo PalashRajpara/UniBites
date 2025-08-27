@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white py-5" style="background: linear-gradient(135deg, #FFA500 0%, #FFB347 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Delicious Food,<br />Delivered Fresh!</h1>
+                <p class="lead mb-4">
+                    Order your favorite meals from our college canteen and enjoy fresh, tasty food delivered right to you.
+                </p>
+                <a href="{{ url_for('menu') }}" class="btn btn-light btn-lg px-4">
+                    <i class="fas fa-utensils me-2"></i>Order Now
+                </a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('static', filename='images/college_photo.jpg') }}" alt="College Photo" class="img-fluid rounded" style="max-height: 400px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+{% if categories %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Browse by Category</h2><img src="{{ url_for('static', filename='images/your_image.jpg') }}" alt="Home">
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{{ url_for('menu', category=category.id) }}" class="text-decoration-none">
+                    <div class="card category-card h-100 text-center border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            {% if category.image_url %}
+                            <img src="{{ category.image_url }}" alt="{{ category.name }}" class="category-icon mb-3" />
+                            {% else %}
+                            <i class="fas fa-utensils display-4 text-primary mb-3"></i>
+                            {% endif %}
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <p class="card-text text-muted small">{{ category.description or 'Delicious options' }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Products -->
+{% if featured_products %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Items</h2>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card product-card h-100 border-0 shadow-sm">
+                    {% if product.image_url %}
+                    <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;" />
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            {% if product.is_vegetarian %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-leaf"></i> Veg
+                            </span>
+                            {% endif %}
+                        </div>
+                        <p class="card-text text-muted">{{ product.description or 'Delicious and fresh' }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="h5 text-primary mb-0">₹{{ product.price }}</span>
+                                {% if product.rating > 0 %}
+                                <div class="text-warning small">
+                                    {% for i in range(5) %}
+                                    {% if i < product.rating %}
+                                    <i class="fas fa-star"></i>
+                                    {% else %}
+                                    <i class="far fa-star"></i>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <span class="text-muted ms-1">({{ product.rating }})</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" class="d-inline">
+                                <input type="hidden" name="quantity" value="1" />
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </form>
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-sm">Login to Order</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- How it Works -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-search display-3 text-primary"></i>
+                </div>
+                <h4>Browse Menu</h4>
+                <p class="text-muted">Explore our delicious menu items organized by categories</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-shopping-cart display-3 text-primary"></i>
+                </div>
+                <h4>Add to Cart</h4>
+                <p class="text-muted">Select your favorite items and add them to your cart</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle display-3 text-primary"></i>
+                </div>
+                <h4>Order & Enjoy</h4>
+                <p class="text-muted">Place your order and enjoy fresh food delivered to you</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

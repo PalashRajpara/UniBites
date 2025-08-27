@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed - UNIBITES{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border rounded shadow-sm p-4 text-center">
+        <div class="mb-4">
+          <i class="fas fa-check-circle text-success" style="font-size: 6rem;"></i>
+        </div>
+        <h1 class="display-4 mb-3 text-success">Order Confirmed!</h1>
+        <p class="lead">Thank you for your order. Your food is being prepared and will be delivered soon.</p>
+
+        <div class="alert alert-info text-start mt-4">
+          <h5><i class="fas fa-receipt"></i> Order Details</h5>
+          <hr>
+          <p><strong>Order ID:</strong> #UB{{ order_id if order_id else (range(1000, 9999) | random) }}</p>
+          <p><strong>Estimated Delivery Time:</strong> 30-45 minutes</p>
+          <p><strong>Delivery Address:</strong> {{ user_address if user_address else "N/A" }}</p>
+          <p><strong>Payment Method:</strong> {{ payment_method if payment_method else "N/A" }}</p>
+          <p><strong>Total Amount Paid:</strong> ₹{{ amount_paid if amount_paid else 'N/A' }}</p>
+        </div>
+
+        <div class="mt-4">
+          <a href="{{ url_for('menu') }}" class="btn btn-primary btn-lg me-2">
+            <i class="fas fa-utensils"></i> Order More Food
+          </a>
+          <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-home"></i> Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
